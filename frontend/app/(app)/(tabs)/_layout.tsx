@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Tabs } from 'expo-router'
 
 const TabsLayout = () => {
@@ -7,8 +8,9 @@ const TabsLayout = () => {
                 name="attendants/index"
                 options={{
                     headerShown: false,
-                    title: "Tab 1 Title"
+                    title: "Tab 1 Title",
                 }}
+                initialParams={{test: "test"}}
             />
             <Tabs.Screen
                 name="index"

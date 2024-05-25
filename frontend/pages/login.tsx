@@ -1,7 +1,7 @@
 import { View, Text, Pressable } from "react-native"
 import { Link, router } from 'expo-router'
 
-const HomePage = () => {
+const LoginPage = () => {
     return (
         <View style={{paddingTop: 70}}>
             <Text>Home</Text>
@@ -9,4 +9,4 @@ const HomePage = () => {
     )
 }
 
-export default HomePage
+export default LoginPage
