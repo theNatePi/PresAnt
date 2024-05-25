@@ -26,7 +26,7 @@ const SignUpButton = ({ signUp, router }) => {
             router.replace('/accountcreation');
         }}
       >
-        <Text style={styles.text}>Sign In</Text>
+        <Text style={styles.text}>Sign Up</Text>
       </TouchableOpacity>
     );
 };
