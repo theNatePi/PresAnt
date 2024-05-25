@@ -23,10 +23,10 @@ const SignUpButton = ({ signUp, router }) => {
         style={styles.button}
         onPress={() => {
             signUp();
-            router.replace('/accountcreation');
+            router.replace('/');
         }}
       >
-        <Text style={styles.text}>Sign In</Text>
+        <Text style={styles.text}>Sign Up</Text>
       </TouchableOpacity>
     );
 };
@@ -69,18 +69,6 @@ export default function SignIn() {
         paddingTop: 70,
         alignItems: "center"
     }}>
-        <Image
-            style={{
-                width: "100%",
-                height: "100%",
-                maxHeight: 300,
-                maxWidth: 250,
-                marginLeft: 30,
-                marginTop: 30,
-                marginBottom: 20
-            }}
-            source={require('../assets/images/landing_logo.png')}
-        />
         <TextInput 
             style={styles.input}
             placeholder="Username"
