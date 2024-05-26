@@ -1,6 +1,7 @@
 # PresAnt!
 
-This project was originally built for VenusHacks 2024! **This Project has NOT yet been fully developed.**
+This project was originally built for VenusHacks 2024! 
+**This project has NOT yet been fully developed.**
 
 PresAnt! transforms the daily grind into an exciting challenge for Anteaters! Compete and collaborate with friends to attend classes, earn points, and climb the leaderboard.
 
