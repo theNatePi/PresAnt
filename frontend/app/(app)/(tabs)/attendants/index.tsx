@@ -1,24 +1,65 @@
-import { Text, View, StyleSheet, SafeAreaView, ScrollView } from 'react-native'
+import { Text, View, StyleSheet, SafeAreaView, ScrollView, Image } from 'react-native'
 import { useEffect } from 'react'
+import React,{ FontAwesome } from '@expo/vector-icons';
 import { useSession } from '@/utils/ctx';
 
+
 const index = ({ test }: { test: string }) => {
-    const { session, isLoading } = useSession();
+  const { session, isLoading } = useSession();
+  const msgs = [
+    {message: "kylehyundai has class soon. Ping to make sure he goes!" },
+    {message: "treestan is in ICS53 with you!"}
+  ]
 
-    useEffect(() => {
-        console.log(session);
-      }, []);
+  useEffect(() => {
+      console.log(session);
+  }, []);
 
-    return (
-        <SafeAreaView style={styles.container}>
-            <ScrollView style={styles.updatesContainer}>
+  return (
+    <SafeAreaView style={styles.container}>
+        <ScrollView style={styles.updatesContainer}>
             <Text style={styles.updatesHeading}>Antendee Updates</Text>
-            </ScrollView>
-        </SafeAreaView>
-    )
-}
+            {msgs.map((msg, index) => (
+                <View key={index} style={styles.notificationContainer}>
+                    <Image source={require("../../../../assets/images/PresAnt_logo.png")} style={styles.profileImage} />
+                    <Text style={styles.message}>{msg.message}</Text>
+                    <FontAwesome name="bell" size={24} color="white" style={styles.bellIcon} />
+                </View>
+            ))}
+        </ScrollView>
+    </SafeAreaView>
+);
+};
 
 const styles = StyleSheet.create({
+  notificationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    marginVertical: 10,
+    backgroundColor: '#3C6198',
+    borderRadius: 10,
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+},
+profileImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 10,
+    marginRight: 15,
+},
+message: {
+    flex: 1,
+    fontSize: 13,
+    fontFamily: 'Inter',
+    fontWeight: 'bold',
+    textAlignVertical : 'center',
+    color: 'white',
+},
+bellIcon: {
+    marginLeft: 15,
+},
     container: {
       flex: 1,
       backgroundColor: '#7A98C4',
