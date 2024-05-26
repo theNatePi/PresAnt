@@ -11,9 +11,10 @@ npm-debug.*
 web-build/
 
 */.venv/**
+*/__pycache__/**
 
 # macOS
 .DS_Store
 
 # Ignore the api_key file
-api_key.py
+backend/apikey.py
