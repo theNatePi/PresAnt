@@ -2,7 +2,6 @@ from pocketbase import PocketBase  # Client also works the same
 from pocketbase.client import FileUpload
 from pocketbase.utils import ClientResponseError
 from flask import Flask, jsonify, request
-import requests
 from flask_cors import CORS
 from backend_components import userLogin
 
