@@ -14,7 +14,7 @@ from flask import Flask, request, jsonify
 import pytz
 
 app = Flask(__name__)
-CORS(app, origins='http://172.20.10.5:5000',
+CORS(app, origins='http://172.20.10.9:5000',
      methods=['GET', 'POST'], allow_headers=['Content-Type'])
 
 CLIENT = PocketBase('http://127.0.0.1:8090')
@@ -341,4 +341,4 @@ def upload_schedule():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host="172.20.10.5")
+    app.run(debug=True, host="172.20.10.9")
