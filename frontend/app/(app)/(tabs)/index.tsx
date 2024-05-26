@@ -21,8 +21,16 @@ const HomePage = () => {
         longitudeDelta: 0.0075,
     };
     const markerCoordinates = [
-        { latitude: 33.646192, longitude: -117.8420 }, // Example marker coordinates
-        { latitude: 33.646230, longitude: -117.8500 },
+        { latitude: 33.647037, longitude: -117.8447 }, // Example marker coordinates
+        { latitude: 33.644473, longitude: -117.8428 },
+        { latitude: 33.645584, longitude: -117.8446 },
+        { latitude: 33.644495, longitude: -117.8406 },
+    ]
+    const userNames = [
+        {username: "kylehyundai"},
+        {username: "natebutwishitwasluca"},
+        {username:"priskalicious"},
+        {username: "treestan"},
     ]
 
     return (
@@ -33,7 +41,7 @@ const HomePage = () => {
                     <Marker
                         key={index}
                         coordinate={coordinate}
-                        title={`Prof. Zot ${index + 1}`} // Marker title (optional)
+                        title={`${userNames[index].username}`} // Marker title (optional)
                         >
                            <Image source={require('../../../assets/images/PresAnt_logo.png')} style={{height: 100, width:100 }} /> 
                         </Marker>
