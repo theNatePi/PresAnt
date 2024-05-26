@@ -27,10 +27,16 @@ const HomePage = () => {
         { latitude: 33.644495, longitude: -117.8406 },
     ]
     const userNames = [
-        {username: "kylehyundai"},
-        {username: "natebutwishitwasluca"},
-        {username:"priskalicious"},
-        {username: "treestan"},
+        {username: "kylehyundai", pic: "../../../assets/images/kyle.png"},
+        {username: "natebutwishitwasluca", pic: "../../../assets/images/nate.jpeg"},
+        {username:"priskalicious", pic: "../../../assets/images/priska.png"},
+        {username: "treestan", pic: "../../../assets/images/trystan.png"},
+    ]
+    const pics = [
+        {pics: require("../../../assets/images/kyle.png")},
+        {pics: require("../../../assets/images/nate.jpeg")},
+        {pics: require("../../../assets/images/priska.png")},
+        {pics: require("../../../assets/images/trystan.png")},
     ]
 
     return (
@@ -43,7 +49,7 @@ const HomePage = () => {
                         coordinate={coordinate}
                         title={`${userNames[index].username}`} // Marker title (optional)
                         >
-                           <Image source={require('../../../assets/images/PresAnt_logo.png')} style={{height: 100, width:100 }} /> 
+                           <Image source={pics[index].pics} style={{height: 75, width:75, borderRadius: 75/2 }} /> 
                         </Marker>
                 ))}
 

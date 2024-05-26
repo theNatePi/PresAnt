@@ -10,6 +10,10 @@ const index = ({ test }: { test: string }) => {
     {message: "kylehyundai has class soon. Ping to make sure he goes!" },
     {message: "treestan is in ICS53 with you!"}
   ]
+  const picture = [
+    {pics: require("../../../../assets/images/kyle.png")},
+    {pics: require("../../../../assets/images/trystan.png")}
+  ]
 
   useEffect(() => {
       console.log(session);
@@ -21,7 +25,7 @@ const index = ({ test }: { test: string }) => {
             <Text style={styles.updatesHeading}>Antendee Updates</Text>
             {msgs.map((msg, index) => (
                 <View key={index} style={styles.notificationContainer}>
-                    <Image source={require("../../../../assets/images/PresAnt_logo.png")} style={styles.profileImage} />
+                    <Image source={picture[index].pics} style={styles.profileImage} />
                     <Text style={styles.message}>{msg.message}</Text>
                     <FontAwesome name="bell" size={24} color="white" style={styles.bellIcon} />
                 </View>
@@ -44,9 +48,9 @@ const styles = StyleSheet.create({
     elevation: 3,
 },
 profileImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 10,
+    width: 45,
+    height: 45,
+    borderRadius: 45/2,
     marginRight: 15,
 },
 message: {

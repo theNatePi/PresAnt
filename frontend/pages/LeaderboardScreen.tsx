@@ -2,14 +2,14 @@ import { Text, View, StyleSheet, ScrollView, Image, ProgressViewIOS } from 'reac
 import { Card } from '@rneui/themed';
 
 const friendsList = [
-  { id: 1, username: 'treestan', icon: require('../assets/images/default.png'), score: 50 },
-  { id: 2, username: 'kylehundai', icon: require('../assets/images/default.png'), score: 20 },
-  { id: 3, username: 'josephchungus', icon: require('../assets/images/default.png'), score: 0.7 },
-  { id: 4, username: 'treestan', icon: require('../assets/images/default.png'), score: 0.6 },
-  { id: 5, username: 'priskalicious', icon: require('../assets/images/default.png'), score: 0.5 },
-  { id: 6, username: 'natebutwishitwasluca', icon: require('../assets/images/default.png'), score: 0.4 },
-  { id: 7, username: 'jojosiwa', icon: require('../assets/images/default.png'), score: 0.3},
-  { id: 8, username: 'meep', icon: require('../assets/images/default.png'), score: 0.3},
+  { id: 1, username: 'treestan', icon: require('../assets/images/trystan.png'), score: 50 },
+  { id: 2, username: 'kylehundai', icon: require('../assets/images/kyle.png'), score: 20 },
+  { id: 3, username: 'bowenchungus', icon: require('../assets/images/bowen.png'), score: 0.7 },
+  { id: 4, username: 'dangnabbits', icon: require('../assets/images/dang.jpg'), score: 0.6 },
+  { id: 5, username: 'priskalicious', icon: require('../assets/images/priska.png'), score: 0.5 },
+  { id: 6, username: 'natebutwishitwasluca', icon: require('../assets/images/nate.jpeg'), score: 0.4 },
+  { id: 7, username: 'jojosiwa', icon: require('../assets/images/cursed.png'), score: 0.3},
+  { id: 8, username: 'gaya3', icon: require('../assets/images/gaya3.jpeg'), score: 0.3},
 ];
 
 const LeaderboardScreen = () => {
@@ -32,15 +32,15 @@ const LeaderboardScreen = () => {
         <View style={styles.rankings}>
           <View style = {styles.secondPlaceContainer}>
             <Text style = {styles.secondPlaceText}>2nd</Text>
-            <Image style = {styles.secondPlaceCircle} source={require('../assets/images/default.png')}/>
+            <Image style = {styles.secondPlaceCircle} source={require('../assets/images/kyle.png')}/>
           </View> 
           <View style = {styles.firstPlaceContainer}>
             <Text style = {styles.firstPlaceText}>1st</Text>
-            <Image style={styles.firstPlaceCircle} source={require('../assets/images/default.png')}/>
+            <Image style={styles.firstPlaceCircle} source={require('../assets/images/trystan.png')}/>
           </View>
           <View style = {styles.thirdPlaceContainer}>
             <Text style = {styles.thirdPlaceText}>3rd</Text>
-            <Image style = {styles.thirdPlaceCircle} source={require('../assets/images/default.png')}/>
+            <Image style = {styles.thirdPlaceCircle} source={require('../assets/images/bowen.png')}/>
           </View>
         </View>
         <View style={styles.rankingContainer}>

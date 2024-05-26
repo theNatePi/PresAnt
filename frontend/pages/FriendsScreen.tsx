@@ -6,14 +6,15 @@ import { Card } from '@rneui/base';
 
 
 const friendsList = [
-  { id: 1, username: 'kylehyundai', icon: require('../assets/images/default.png') },
-  { id: 2, username: 'natebutwishitwasluca', icon: require('../assets/images/default.png') },
-  { id: 3, username: 'priskalicious', icon: require('../assets/images/default.png') },
-  { id: 4, username: 'treestan', icon: require('../assets/images/default.png') },
-  { id: 5, username: 'josephchungus', icon: require('../assets/images/default.png') },
-  { id: 6, username: 'gaya3', icon: require('../assets/images/default.png') },
-  { id: 7, username: 'jojosiwa', icon: require('../assets/images/default.png') },
-  { id: 8, username: 'meep', icon: require('../assets/images/default.png') },
+  { id: 1, username: 'kylehyundai', icon: require('../assets/images/kyle.png') },
+  { id: 2, username: 'natebutwishitwasluca', icon: require('../assets/images/nate.jpeg') },
+  { id: 3, username: 'priskalicious', icon: require('../assets/images/priska.png') },
+  { id: 4, username: 'treestan', icon: require('../assets/images/trystan.png') },
+  { id: 5, username: 'bowenchungus', icon: require('../assets/images/bowen.png') },
+  { id: 6, username: 'gaya3', icon: require('../assets/images/gaya3.jpeg') },
+  { id: 7, username: 'jojosiwa', icon: require('../assets/images/cursed.png') },
+  { id: 8, username: 'dangnabbits', icon: require('../assets/images/dang.jpg') },
+  { id: 9, username: 'bowenchungus', icon: require('../assets/images/bowen.png') },
 ];
 
 const FriendsScreen = () => {
