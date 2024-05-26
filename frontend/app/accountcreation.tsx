@@ -6,7 +6,7 @@ import { PixelRatio } from 'react-native';
 
 import { useSession } from '../utils/ctx';
 
-const SignUpButton = ({ signUp, router }) => {
+const SignUpButton = ({ signUp, router, text = "Sign Up" }) => {
     return (
       <TouchableOpacity
         style={styles.button}
@@ -15,7 +15,7 @@ const SignUpButton = ({ signUp, router }) => {
             router.replace('/');
         }}
       >
-        <Text style={styles.text}>Sign Up</Text>
+        <Text style={styles.text}>{text}</Text>
       </TouchableOpacity>
     );
 };
@@ -120,10 +120,8 @@ const SignUpForm = ({switchToImage}) => {
 const UploadImage = ({signIn, router}) => {
     const [permission, requestPermission] = useCameraPermissions();
     const camera = useRef(null);
-    const targetPixelCount = 1080; // If you want full HD pictures
-    const pixelRatio = PixelRatio.get(); // The pixel ratio of the device
-    // pixels * pixelRatio = targetPixelCount, so pixels = targetPixelCount / pixelRatio
-    const pixels = targetPixelCount / pixelRatio;
+    const [photoCount, setPhotoCount] = useState(0);
+
 
     if (!permission) {
         // Camera permissions are still loading.
@@ -156,42 +154,143 @@ const UploadImage = ({signIn, router}) => {
             alignItems: "center",
             paddingTop: 70,
         }}>
-            <Text>
-                Upload A Profile Picture
-            </Text>
-            <View
+            {(photoCount == 0) && (
+                <View
+                style={{
+                    width: "100%",
+                    height: "100%",
+                    alignItems: "center",
+                }}
+            >
+                <Text 
+                    style={{
+                        textAlign: "center",
+                        color: "white",
+                        fontSize: 50,
+                        fontWeight: 600
+                    }}
+                >
+                    First:
+                </Text>
+                <Text 
+                    style={{
+                        textAlign: "center",
+                        color: "white",
+                        fontSize: 20,
+                        paddingBottom: 20
+                    }}
+                >
+                    Take a <Text style={{fontWeight: 600}}>HAPPY</Text> photo!
+                </Text>
+                <View
                 style={{
                     height: 400,
                     width: "80%"
+                    }}
+                >
+                    <CameraView style={styles.camera} facing={"front"} ref={camera} />
+                </View>
+
+
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={async () => {
+                        if (camera) {
+                            await camera.current.takePictureAsync(pictureOptions).then(onPictureSaved);
+                            setPhotoCount(photoCount + 1);
+                        }
+                    }
+                    }
+                >
+                    <Text style={styles.text}>Take Picture</Text>
+                </TouchableOpacity>
+                </View>
+            )}
+
+            {(photoCount == 1) && (
+                <View
+                style={{
+                    width: "100%",
+                    height: "100%",
+                    alignItems: "center",
                 }}
             >
-                <CameraView style={styles.camera} facing={"front"} ref={camera} />
-            </View>
+                <Text 
+                    style={{
+                        textAlign: "center",
+                        color: "white",
+                        fontSize: 50,
+                        fontWeight: 600
+                    }}
+                >
+                    Second:
+                </Text>
+                <Text 
+                    style={{
+                        textAlign: "center",
+                        color: "white",
+                        fontSize: 20,
+                        paddingBottom: 20
+                    }}
+                >
+                    Take a <Text style={{fontWeight: 600}}>SAD</Text> photo!
+                </Text>
+                <View
+                style={{
+                    height: 400,
+                    width: "80%"
+                    }}
+                >
+                    <CameraView style={styles.camera} facing={"front"} ref={camera} />
+                </View>
 
 
-            <TouchableOpacity
-                style={styles.button}
-                onPress={async () => {
-                    if (camera) {
-                        // const result = await captureRef(camera, {
-                        //     result: 'base64',
-                        //     // height: pixels,
-                        //     // width: pixels,
-                        //     quality: 1,
-                        //     format: 'png',
-                        // });
-                        // console.log(result);
-                        await camera.current.takePictureAsync(pictureOptions).then(onPictureSaved);
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={async () => {
+                        if (camera) {
+                            await camera.current.takePictureAsync(pictureOptions).then(onPictureSaved);
+                            setPhotoCount(photoCount + 1);
+                        }
                     }
-                }
-                }
-            >
-                <Text style={styles.text}>Take Picture</Text>
-            </TouchableOpacity>
+                    }
+                >
+                    <Text style={styles.text}>Take Picture</Text>
+                </TouchableOpacity>
+                </View>
+            )}
 
-            
-
-            <SignUpButton signUp={signIn} router={router}/>
+            {(photoCount == 2) && (
+            <View style={{
+                width: "100%",
+                height: "100%",
+                alignItems: "center",
+                paddingTop: 70,
+            }}>
+            <Image
+                style={{
+                    width: "100%",
+                    height: "100%",
+                    maxHeight: 300,
+                    maxWidth: 250,
+                    marginLeft: 30,
+                    marginTop: 30,
+                    marginBottom: 20
+                }}
+                source={require('../assets/images/landing_logo.png')}
+            />
+                <Text
+                    style={{
+                        textAlign: "center",
+                        color: "white",
+                        fontSize: 20,
+                    }}
+                >
+                    All Done!
+                </Text>
+                <SignUpButton signUp={signIn} router={router} text='Jump In!'/>
+            </View>
+            )}
         </View>
     )
 }
