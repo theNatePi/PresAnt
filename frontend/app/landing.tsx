@@ -2,14 +2,24 @@ import { router } from 'expo-router';
 import { Text, View, Image, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 
 import { useSession } from '../utils/ctx';
+import { setItem } from 'expo-secure-store';
+import { login } from '@/utils/routes/login';
+import { useState } from 'react';
 
-const LogInButton = ({ signIn, router }) => {
+const LogInButton = ({ username, password, router, invalidLogin }) => {
     return (
       <TouchableOpacity
         style={styles.button}
-        onPress={() => {
-            signIn("aaa", "Aaa");
-            router.replace('/');
+        onPress={async () => {
+            const response = await login(username, password);
+            if (response == 400) {
+                invalidLogin(true);
+            } else {
+                let userID = response.user_id;
+                console.log(userID);
+                setItem('user', userID);
+                router.replace('/');
+            }
         }}
       >
         <Text style={styles.text}>Log In</Text>
@@ -22,7 +32,7 @@ const SignUpButton = ({ signUp, router }) => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-            signUp();
+            // signUp();
             router.replace('/accountcreation');
         }}
       >
@@ -60,6 +70,10 @@ const styles = StyleSheet.create({
   });
 
 export default function SignIn() {
+  const [username, setUsername] = useState("NULL");
+  const [password, setPassword] = useState("NULL");
+  const [invalidPassword, setInvalidPassword] = useState(false);
+
   const { signIn } = useSession();
   return (
     <View style={{
@@ -86,6 +100,7 @@ export default function SignIn() {
             placeholder="Username"
             returnKeyType="next"
             autoCorrect={false}
+            onChangeText={setUsername}
             placeholderTextColor={"#7A98C4"}
         />
         <TextInput 
@@ -94,9 +109,13 @@ export default function SignIn() {
             placeholderTextColor="#7A98C4"
             returnKeyType='go'
             secureTextEntry
+            onChangeText={setPassword}
             autoCorrect={false}
         />
-        <LogInButton router={router} signIn={signIn}/>
+        {invalidPassword && (
+            <Text>User Credentials Invalid</Text>
+        )}
+        <LogInButton router={router} username={username} password={password} invalidLogin={setInvalidPassword}/>
         <SignUpButton router={router} signUp={signIn}/>
     </View>
   );

@@ -1,27 +1,46 @@
-import Backend from './utils.js';
+import Backend from './axios';
 
 /*
   fetches all the events data
 */
-const fetchEvents = async () => {
-  const data = await Backend.get('/events');
-  return data.data;
+const createAccount = async (username, password) => {
+  const requestBody = {
+    username: username,
+    password: password,
+  };
+
+  // Perform a POST request to the endpoint with the username and password in the body
+  const response = await Backend.post('/signup/', requestBody);
+  // Return the response data
+  return response.data;
 };
 
-/*
-    fetches joined data from all tables
-*/
-const fetchJoinedEvents = async () => {
-  const data = await Backend.get('/events/joined');
-  return data.data;
+const addPhotos = async (userId, happyImage, sadImage) => {
+  const requestBody = {
+    user_id: userId,
+    happy_photo: happyImage,
+    sad_photo: sadImage
+  };
+
+  // Perform a POST request to the endpoint with the username and password in the body
+  const response = await Backend.post('/photo/', requestBody);
+  // Return the response data
+  return response.data;
 };
 
-/*
-    fetches joined data from all tables for a specific event
-*/
-const fetchJoinedEventsById = async event_id => {
-  const data = await Backend.get(`/events/joined/${event_id}`);
-  return data.data;
+const login = async (username, password) => {
+  const requestBody = {
+    username: username,
+    password: password,
+  };
+
+  // Perform a POST request to the endpoint with the username and password in the body
+  const response = await Backend.post('/login', requestBody);
+  if (response.data.code != 200) {
+    return 400;
+  }
+  // Return the response data
+  return response.data;
 };
 
-export { fetchEvents, fetchJoinedEvents, fetchJoinedEventsById };
+export { createAccount, addPhotos, login };

@@ -1,11 +1,18 @@
 import { View, Text, Pressable, StyleSheet, Image, TouchableOpacity } from "react-native"
-import { Link, router } from 'expo-router'
+import { Link, router, Redirect } from 'expo-router'
 import { useSession } from '../../../utils/ctx'
 import MapView, { Marker } from "react-native-maps";
 import React, {useState} from 'react';
+import { getItem, setItem } from "expo-secure-store";
 
 const HomePage = () => {
-    const { signOut } = useSession();
+    const signOut = () => {
+        let id = getItem('user');
+        console.log(id);
+        setItem('user', "NONE");
+        router.replace('/landing');
+    }
+
     const customMarkerImage = require('../../../assets/images/PresAnt_logo.png');
     const Region = {
         latitude: 33.646192, // Example latitude

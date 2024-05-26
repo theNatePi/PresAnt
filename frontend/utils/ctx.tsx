@@ -1,14 +1,14 @@
 import React from 'react';
-import { useStorageState } from './useStorageState';
+import { useStorageState, setStorageItemAsync } from './useStorageState';
 
 const AuthContext = React.createContext<{
-  signIn: () => void;
+  signIn: (username: string) => void;
   signOut: () => void;
   session?: string | null;
   id?: number | null;
   isLoading: boolean;
 }>({
-  signIn: () => null,
+  signIn: (username) => null,
   signOut: () => null,
   session: null,
   id: null,
@@ -28,17 +28,21 @@ export function useSession() {
 }
 
 export function SessionProvider(props: React.PropsWithChildren) {
-  const [[isLoading, session], setSession] = useStorageState('session');
+  let [[isLoading, session], setSession] = useStorageState('session');
+  const [s, s2  , logOut] = useStorageState('session');
 
   return (
     <AuthContext.Provider
       value={{
-        signIn: () => {
-          // Perform sign-in logic here
-          setSession("bob");
+        signIn: (username) => {
+            console.log("HI IM HERE");
+            console.log(username);
+            setSession(username);
+            console.log(session);
         },
-        signOut: () => {
+        signOut: async () => {
           setSession(null);
+          await setStorageItemAsync('session', null);
         },
         session,
         isLoading,

@@ -3,15 +3,19 @@ import { Text, View, Image, TouchableOpacity, StyleSheet, TextInput, Button } fr
 import { useState, useRef } from 'react';
 import { CameraView, useCameraPermissions, CameraPictureOptions } from 'expo-camera';
 import { PixelRatio } from 'react-native';
+import { createAccount, addPhotos } from '../utils/routes/login';
 
 import { useSession } from '../utils/ctx';
 
-const SignUpButton = ({ signUp, router, text = "Sign Up" }) => {
+import { getItem, setItem } from 'expo-secure-store';
+
+const SignUpButton = ({ userID, firstImage, secondImage, router, text = "Sign Up", username = null, password = null }) => {
+    const userId = getItem('user');
     return (
       <TouchableOpacity
         style={styles.button}
-        onPress={() => {
-            signUp();
+        onPress={async () => {
+            await addPhotos(userId, firstImage, secondImage);
             router.replace('/');
         }}
       >
@@ -21,12 +25,20 @@ const SignUpButton = ({ signUp, router, text = "Sign Up" }) => {
 };
 
 
-const NextButton = ({switchToImage}) => {
+const NextButton = ({switchToImage, firstPassword, secondPassword, username, passwordMismatch}) => {
     return (
       <TouchableOpacity
         style={styles.button}
-        onPress={() => {
-            switchToImage(true);
+        onPress={async () => {
+            if (firstPassword === secondPassword) {
+                const response = await createAccount(username, firstPassword);
+                const userID = response.user_id;
+                console.log(userID);
+                setItem("user", userID);
+                switchToImage(true);
+            } else {
+                passwordMismatch(true);
+            }
         }}
       >
         <Text style={styles.text}>Next</Text>
@@ -70,7 +82,13 @@ const styles = StyleSheet.create({
 });
 
 const SignUpForm = ({switchToImage}) => {
+    const [passwordMismatch, setMismatch] = useState(false);
+    const [username, setUsername] = useState('invalid');
+    const [firstPassword, firstPasswordChange] = useState('err');
+    const [secondPassword, secondPasswordChange] = useState('invalid');
+
     return (
+
         <View style={{
             width: "100%",
             height: "100%",
@@ -94,6 +112,7 @@ const SignUpForm = ({switchToImage}) => {
                     placeholder="Username"
                     returnKeyType="next"
                     autoCorrect={false}
+                    onChangeText={setUsername}
                     placeholderTextColor={"#7A98C4"}
                 />
                 <TextInput 
@@ -102,6 +121,7 @@ const SignUpForm = ({switchToImage}) => {
                     placeholderTextColor="#7A98C4"
                     returnKeyType='go'
                     secureTextEntry
+                    onChangeText={firstPasswordChange}
                     autoCorrect={false}
                 />
                 <TextInput 
@@ -110,10 +130,15 @@ const SignUpForm = ({switchToImage}) => {
                     placeholderTextColor="#7A98C4"
                     returnKeyType='go'
                     secureTextEntry
+                    onChangeText={secondPasswordChange}
                     autoCorrect={false}
                 />
-                <NextButton switchToImage={switchToImage}/>
+                {passwordMismatch && (
+                    <Text>Passwords do not match</Text>
+                )}
+                <NextButton switchToImage={switchToImage} firstPassword={firstPassword} secondPassword={secondPassword} username={username} passwordMismatch={setMismatch} />
         </View>
+
     )
 }
 
@@ -121,7 +146,10 @@ const UploadImage = ({signIn, router}) => {
     const [permission, requestPermission] = useCameraPermissions();
     const camera = useRef(null);
     const [photoCount, setPhotoCount] = useState(0);
+    const userID = getItem('user')
 
+    const [firstImage, setFirst] = useState(null);
+    const [secondImage, setSecond] = useState(null);
 
     if (!permission) {
         // Camera permissions are still loading.
@@ -139,7 +167,11 @@ const UploadImage = ({signIn, router}) => {
     }
 
     const onPictureSaved = ({ uri, width, height, exif, base64 }) => {
-        console.log(base64);
+        if (photoCount == 0) {
+            setFirst(base64);
+        } else if (photoCount == 1) {
+            setSecond(base64)
+        }
     }
 
     const pictureOptions = {
@@ -288,7 +320,7 @@ const UploadImage = ({signIn, router}) => {
                 >
                     All Done!
                 </Text>
-                <SignUpButton signUp={signIn} router={router} text='Jump In!'/>
+                <SignUpButton userID={userID} firstImage={firstImage} secondImage={secondImage} router={router} text='Jump In!'/>
             </View>
             )}
         </View>
