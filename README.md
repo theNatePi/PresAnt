@@ -18,9 +18,13 @@ PresAnt! transforms the daily grind into an exciting challenge for Anteaters! Co
 ## Technologies Used
 
 Frontend
+
 ![React Native](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+- [React-Native-Maps](https://docs.expo.dev/versions/latest/sdk/map-view/)
+- [Expo](https://expo.dev/)
 
 Backend
+
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)
 - [PocketBase](https://pocketbase.io/)
