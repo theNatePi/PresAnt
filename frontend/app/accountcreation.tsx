@@ -4,10 +4,13 @@ import { useState, useRef } from 'react';
 import { CameraView, useCameraPermissions, CameraPictureOptions } from 'expo-camera';
 import { PixelRatio } from 'react-native';
 import { createAccount, addPhotos } from '../utils/routes/login';
+import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
 
 import { useSession } from '../utils/ctx';
 
 import { getItem, setItem } from 'expo-secure-store';
+import { uploadICSFile } from '@/utils/routes/uploads';
 
 const SignUpButton = ({ userID, firstImage, secondImage, router, text = "Sign Up", username = null, password = null }) => {
     const userId = getItem('user');
@@ -150,6 +153,43 @@ const UploadImage = ({signIn, router}) => {
 
     const [firstImage, setFirst] = useState(null);
     const [secondImage, setSecond] = useState(null);
+
+    const [isUploading, setIsUploading] = useState(false);
+    const [isUploaded, setIsUploaded] = useState(false);
+
+    const handleSelectAndUploadFile = async () => {
+        // Let the user pick a document
+        let result = await DocumentPicker.getDocumentAsync({
+          type: 'text/calendar', // MIME type for .ics files to narrow down file selection
+        });
+    
+        // Exit if the user cancels the document picker
+        if (result.canceled !== false) {
+          alert('File selection was cancelled.');
+          return;
+        }
+    
+        try {
+          setIsUploading(true); // Indicate the start of the upload process
+    
+          // Assuming your uploadFile function takes the file URI and handles the upload
+        //   await uploadFile(result.uri);
+        const file = result.assets[0].uri
+        console.log(result);
+        const content = await FileSystem.readAsStringAsync(file);
+        console.log(content);
+        const r = await uploadICSFile(userID, content);
+
+    
+          alert('File uploaded successfully!');
+        } catch (error) {
+          console.error('Upload failed:', error);
+          alert('Failed to upload file.');
+        } finally {
+          setIsUploading(false); // Reset the upload indicator
+          setIsUploaded(true);
+        }
+    }
 
     if (!permission) {
         // Camera permissions are still loading.
@@ -311,6 +351,62 @@ const UploadImage = ({signIn, router}) => {
                 }}
                 source={require('../assets/images/landing_logo.png')}
             />
+                <Text
+                    style={{
+                        textAlign: "center",
+                        color: "white",
+                        fontSize: 20,
+                    }}
+                >
+                    Upload Your Schedule
+                </Text>
+
+                {isUploading ? (
+                    <Text>Uploading...</Text>
+                ) : (
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={handleSelectAndUploadFile}
+                    >
+                        <Text style={styles.text}>Select and Upload .ics File</Text>
+                    </TouchableOpacity>
+                )}
+                
+                {isUploaded && (
+                    <TouchableOpacity
+                    style={styles.button}
+                    onPress={async () => {
+                        if (camera) {
+                            setPhotoCount(photoCount + 1);
+                        }
+                    }
+                    }
+                    >
+                        <Text style={styles.text}>Next</Text>
+                    </TouchableOpacity>
+                )}
+                </View>
+                )}
+
+                {(photoCount == 3) && (
+                <View style={{
+                    width: "100%",
+                    height: "100%",
+                    alignItems: "center",
+                    paddingTop: 70,
+                }}>
+                <Image
+                    style={{
+                        width: "100%",
+                        height: "100%",
+                        maxHeight: 300,
+                        maxWidth: 250,
+                        marginLeft: 30,
+                        marginTop: 30,
+                        marginBottom: 20
+                    }}
+                    source={require('../assets/images/landing_logo.png')}
+                />
                 <Text
                     style={{
                         textAlign: "center",

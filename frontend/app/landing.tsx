@@ -101,6 +101,7 @@ export default function SignIn() {
             returnKeyType="next"
             autoCorrect={false}
             onChangeText={setUsername}
+            autoCapitalize='none'
             placeholderTextColor={"#7A98C4"}
         />
         <TextInput 

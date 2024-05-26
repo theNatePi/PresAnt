@@ -1,153 +1,13 @@
 from pocketbase import PocketBase  # Client also works the same
 from pocketbase.client import FileUpload
 from pocketbase.utils import ClientResponseError
-from flask import Flask, jsonify, request
-from friends import addRequest, addFriend, removeFriend, getFriendList
-from flask_cors import CORS
-from pocketbase import PocketBase  # Client also works the same
-from pocketbase.client import FileUpload
-from pocketbase.utils import ClientResponseError
 from icalendar import Calendar
 from datetime import datetime, timedelta
 from geocode import getGeocodeData
 from flask import Flask, request, jsonify
 import pytz
 
-app = Flask(__name__)
-CORS(app, origins='http://172.20.10.5:5000',
-     methods=['GET', 'POST'], allow_headers=['Content-Type'])
-
 CLIENT = PocketBase('http://127.0.0.1:8090')
-
-
-def attemptSignUp(username, password):
-    email = username + '@uci.edu'
-    signup_data = {
-        "username": username,
-        "email": email,
-        "emailVisibility": True,
-        "password": password,
-        "passwordConfirm": password,
-        "friend_list": {"friends": []},
-        "classid_list": {"classes": []},
-        "made": 0,
-        "missed": 0,
-        "class_schedule": {},
-        "pending_list": {"pending": []},
-    }
-    print(signup_data)
-    try:
-        received = CLIENT.collection('ant_users').create(signup_data)
-        login_data = {
-            "code": 200, 
-            "user_id": str(received.id)
-        }
-        return login_data
-    except ClientResponseError as err:
-        print(err.data)
-        login_data = {
-            "code": 400,
-            "user_id": ''
-        }
-        return login_data
-
-@app.route("/signup/", methods=["POST"])
-def sign_up():
-    content_type = request.headers.get('Content-Type')
-    if (content_type == 'application/json'):
-        info = request.json
-        result = attemptSignUp(info['username'], info['password'])
-        print(result['code'])
-        return jsonify(result) # info is DICT
-
-
-def assignPhotos(user_id, sad_photo_string, happy_photo_string):
-    try:
-        student_return = CLIENT.collection('ant_users').get_one(user_id)
-        new_photo_data = {
-            "sad_photo": sad_photo_string,
-            "happy_photo": happy_photo_string
-        }
-        CLIENT.collection('ant_users').update(user_id, new_photo_data)
-        photo_data = {
-            "code": 200
-        }
-        return photo_data
-    except ClientResponseError as err:
-        photo_data = {
-            "code": 400
-        }
-        return photo_data
-    
-@app.route("/photo/", methods = ["POST"])
-def assign_photos():
-    content_type = request.headers.get("Content-Type")
-    if content_type == "application/json":
-        info = request.json
-        result = assignPhotos(info['user_id'], info['sad_photo'], info['happy_photo'])
-        print(result['code'])
-        return jsonify(result)
-        
-
-def attemptLogin(username, password):
-    try:
-        email = username + '@uci.edu'
-        received = CLIENT.collection('ant_users').auth_with_password(
-            email, password)
-        login_data = {
-            "code": 200,
-            "user_id": str(received.record.id)
-        }
-        return login_data
-    except ClientResponseError as err:
-        login_data = {
-            "code": 400,
-            "user_id": ''
-        }
-        return login_data
-
-@app.route("/login", methods = ["POST"])
-def login():
-    content_type = request.headers.get("Content-Type")
-    if content_type == "application/json":
-        info = request.json
-        result = attemptLogin(info['username'], info['password'])
-        print(result['code'])
-        return jsonify(result)
-
-@app.route("/request", methods= ["POST"])
-def add_request():
-    content_type = request.headers.get('Content-Type')
-    if (content_type == 'application/json'):
-        info = request.json
-        result = addRequest(info['user_id'], info['request_id'])
-        return jsonify(result)
-    
-@app.route("/addFriend", methods = ['POST'])
-def add_friend():
-    content_type = request.headers.get('Content-Type')
-    if (content_type == 'application/json'):
-        info = request.json
-        result = addFriend(info['user_id'], info['pending_id'])
-        return jsonify(result)
-    
-@app.route("/removeFriend", methods = ["POST"])
-def remove_friend():
-    content_type = request.headers.get('Content-Type')
-    if(content_type == 'application/json'):
-        info = request.json
-        result = addFriend(info['user_id'], info['pending_id'])
-        return jsonify(result)
-    
-@app.route("/getFriendList", methods= ["POST"])
-def get_friend_list():
-    content_type = request.headers.get('Content-Type')
-    if(content_type == 'application/json'):
-        info = request.json
-        result = getFriendList(info['user_id'])
-        return jsonify(result)
-
-
 
 def readICSText(ics_text):
     events = {}
@@ -191,9 +51,9 @@ def readICSText(ics_text):
 def checkUnique(class_data):
     result = CLIENT.collection('ant_classes').get_list(1, 20, {"filter:": f'title = "{class_data[0]}" && start = "{class_data[1]}" && end = "{class_data[2]}"'})
     if result:
-        return True
-    else:
         return False
+    else:
+        return True
     
 def getIntervals(start_time, end_time):
     start_datetime = datetime.strptime(start_time, "%H:%M:%S")
@@ -245,7 +105,7 @@ def uploadSchedule(student_id, ics_text):
             # MAKE LONG AND LAT MAPS API CALL. REMEMBER TO CHANGE.
             # geocode_data = getGeocodeData(class_data[3])
             geocode_data = {'lat': 33.6460519, 'lng': -117.8427446}
-            new_class_data = {
+            class_data = {
                 "title": class_data[0],
                 "start": class_data[1],
                 "end": class_data[2],
@@ -256,7 +116,7 @@ def uploadSchedule(student_id, ics_text):
             }
             try:
                 # Create new class.
-                received = CLIENT.collection('ant_classes').create(new_class_data)
+                received = CLIENT.collection('ant_classes').create(class_data)
                 
                 # Add class_id to list in student.
                 student_return = CLIENT.collection('ant_users').get_one(student_id)
@@ -287,7 +147,7 @@ def uploadSchedule(student_id, ics_text):
             try:
                 # Add student_id to list in class.
                 class_return = CLIENT.collection('ant_classes').get_list(1, 20, {"filter:": f'title = "{class_data[0]}" && start = "{class_data[1]}" && end = "{class_data[2]}"'})
-                class_ret_data = class_return.items[0]
+                class_ret_data = class_return[0]
                 studentid_dict = class_return.studentid_list
                 studentid_list = studentid_dict['ids']
                 studentid_list.append(student_id)
@@ -329,16 +189,10 @@ def uploadSchedule(student_id, ics_text):
         "message": f"{class_data[0]} update successful."
     }
     return upload_data
-
 @app.route("/uploadics/", methods= ["POST"])
-def upload_schedule():
+def upload_schedule(student_id, ics_text):
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
         info = request.json
-        result = uploadSchedule(info['student_id'], info['ics_text'])
+        result = uploadSchedule(info['user_id'], info['ics_text'])
         return jsonify(result)
-
-
-
-if __name__ == '__main__':
-    app.run(debug=True, host="172.20.10.5")
